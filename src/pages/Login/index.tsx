@@ -81,6 +81,8 @@ function Login() {
                     <button className="border mt-4 px-2" type="submit"  disabled={loading}>
                         {loading ? 'Loging in...' : 'Login'}
                     </button>
+
+                    <a className="text-blue-400" href="/register">Register?</a>
                 </form>
             </div>
         </section>
