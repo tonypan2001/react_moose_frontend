@@ -22,6 +22,7 @@ export default function useAuth() {
     return {
         setAccessToken: saveAccessToken,
         clearAccessToken,
-        accessToken
+        accessToken,
+        getAccessToken
     }
 }
