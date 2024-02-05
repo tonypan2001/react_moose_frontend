@@ -14,8 +14,7 @@ function Home() {
     const [data, setData] = useState<UserData | null>(null)
 
     useEffect(() => {
-        const accessToken = localStorage.getItem("accessToken")
-        if (!accessToken) {
+        if (auth.accessToken === null) {
             navigate("/login")
         }
         async function getUser (): Promise<void> {

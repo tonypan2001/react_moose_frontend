@@ -1,9 +1,18 @@
-import React, { useState } from "react"
-import { useNavigate } from "react-router-dom"
+import React, { useEffect, useState } from "react"
+import { useLocation, useNavigate } from "react-router-dom"
 
 function Register() {
 
     const navigate = useNavigate()
+    const locate = useLocation()
+
+    const isAuthPage = locate.pathname === "/register"
+
+    useEffect(() => {
+        if (isAuthPage) {
+            navigate("/")
+        }
+    })
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
@@ -90,7 +99,9 @@ function Register() {
                         {loading ? 'Registering...' : 'Register'}
                     </button>
 
-                    <a className="text-blue-400" href="/login">Login?</a>
+                    <div className="text-center mt-4 w-full">
+                        <a className="text-blue-400" href="/login">Login?</a>
+                    </div>
                 </form>
             </div>
         </section>
