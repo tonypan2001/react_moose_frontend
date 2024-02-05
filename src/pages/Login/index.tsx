@@ -1,6 +1,6 @@
 // Login.tsx
-import React, { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 // import PropTypes from "prop-types"
 
 interface UserLogin {
@@ -10,7 +10,7 @@ interface UserLogin {
 
 function Login() {
 
-    const locate = useLocation()
+    // const locate = useLocation()
     const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
@@ -18,13 +18,13 @@ function Login() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
 
-    const isAuthPage = locate.pathname === "/login"
+    // const isAuthPage = locate.pathname === "/login" || locate.pathname === "/register"
 
-    useEffect(() => {
-        if (isAuthPage) {
-            navigate("/")
-        }
-    })
+    // useEffect(() => {
+    //     if (isAuthPage) {
+    //         navigate("/")
+    //     }
+    // }, [isAuthPage, navigate])
 
     async function userLogin(credentials: UserLogin): Promise<void> {
         try {

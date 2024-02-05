@@ -18,7 +18,7 @@ function Profile() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
 
-    const [name, setName] = useState(data?.name || null)
+    const [name, setName] = useState<string>(data?.name || "")
     const [password, setPassword] = useState("")
     const [c_password, setC_Password] = useState("")
 
@@ -106,7 +106,7 @@ function Profile() {
                         className="border"
                         type="text" 
                         name="name"
-                        placeholder={data?.name}
+                        placeholder={data?.name || ""}
                         onChange={(e) => setName(e.target.value)}
                         required
                         />

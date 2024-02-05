@@ -1,18 +1,9 @@
-import React, { useEffect, useState } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 function Register() {
 
     const navigate = useNavigate()
-    const locate = useLocation()
-
-    const isAuthPage = locate.pathname === "/register"
-
-    useEffect(() => {
-        if (isAuthPage) {
-            navigate("/")
-        }
-    })
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
