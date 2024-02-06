@@ -1,9 +1,13 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
+import useAuth from "../../store/useAuth"
+
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL
 
 function Register() {
 
-    const navigate = useNavigate()
+    const auth = useAuth()
+    const navigateTo = useNavigate()
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
@@ -12,7 +16,14 @@ function Register() {
     const [password, setPassword] = useState("")
     const [c_password, setC_Password] = useState("")
 
-    const handleRegister = async (e: React.FormEvent): Promise<void> => {
+    useEffect(() => {
+        // if accessToken does exist
+        if (auth.accessToken !== null) {
+            navigateTo("/")
+        }
+    }, [auth.accessToken, navigateTo])
+
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
         setError("")
@@ -21,27 +32,25 @@ function Register() {
             setError("Passwords do not match")
             return
         }
+        try {
+            const response = await fetch(apiBaseURL + `register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({name, email, password, c_password})
+            })
 
-        const response = await fetch(`http://localhost/api/auth/register`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({name, email, password, c_password})
-        })
-
-        console.log(response.json())
-
-        if (response.ok) {
+            if (!response.ok) {
+                throw new Error(`Registration Failed. Status: ${response.status}: ${response.statusText}`)
+            }
+        } catch (error) {
+            setError(error+"")
+        } finally {
             setLoading(false)
             alert("Registration successfull")
-            navigate("/login")
-
-        } else {
-            setLoading(false)
-            alert("Registration failed")
+            navigateTo("/login")
         }
-
     }
 
     return(

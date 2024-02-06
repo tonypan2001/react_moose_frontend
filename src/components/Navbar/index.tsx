@@ -7,6 +7,8 @@ interface UserData {
     name: string
 }
 
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL
+
 export default function Navbar() {
     const auth = useAuth()
     const navigate = useNavigate()
@@ -18,34 +20,31 @@ export default function Navbar() {
     const [isFetching, setIsFetching] = useState(false)
 
     useEffect(() => {
+        async function getUser() {
+            try {
+                const response = await fetch(apiBaseURL + `user`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${auth.accessToken}`,
+                        "Content-Type": "application/json"
+                    },
+                })
+        
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch user. [Status:${response.status}]:${response.statusText}`)
+                } else {
+                    const data = await response.json()
+                    setData(data)
+                    return data
+                }
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setIsFetching(true)
+            }
+        }
         if (!isAuthPage && auth.accessToken !== null && !isFetching) 
         {
-            // eslint-disable-next-line no-inner-declarations
-            async function getUser (): Promise<void> {
-                try {
-                    // setIsFetching(true)
-                    const response = await fetch(`http://localhost/api/auth/user`, {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${auth.accessToken}`,
-                            "Content-Type": "application/json"
-                        },
-                    })
-            
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch user information")
-                    } else {
-                        const data = await response.json()
-                        setData(data)
-                        return data
-                    }
-    
-                } catch (error) {
-                    console.log(error)
-                } finally {
-                    setIsFetching(true)
-                }
-            }
             getUser()
         }
     }, [auth.accessToken, isAuthPage, isFetching])

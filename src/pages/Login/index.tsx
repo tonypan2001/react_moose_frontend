@@ -1,17 +1,20 @@
 // Login.tsx
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
-// import PropTypes from "prop-types"
+import useAuth from "../../store/useAuth"
 
 interface UserLogin {
-    email:string
-    password:string
+    email: string
+    password: string
 }
+
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL
 
 function Login() {
 
     // const locate = useLocation()
-    const navigate = useNavigate()
+    const auth = useAuth()
+    const navigateTo = useNavigate()
 
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
@@ -26,11 +29,18 @@ function Login() {
     //     }
     // }, [isAuthPage, navigate])
 
-    async function userLogin(credentials: UserLogin): Promise<void> {
+    useEffect(() => {
+        // if accessToeken does exist
+        if (auth.accessToken !== null) {
+            navigateTo("/")
+        }
+    }, [auth.accessToken, navigateTo])
+
+    async function userLogin(credentials: UserLogin) {
         try {
             setLoading(true)
             setError("")
-            const response = await fetch(`http://localhost/api/auth/login`, {
+            const response = await fetch(apiBaseURL + `login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -38,11 +48,15 @@ function Login() {
                 body: JSON.stringify(credentials)
             })
 
+            if (!response.ok) {
+                throw new Error(`Failed to login. Status: ${response.status}: ${response.statusText}`)
+            }
+
             const data = await response.json()
 
             if (data) {
                 localStorage.setItem("accessToken", data.accessToken)
-                navigate("/")
+                navigateTo("/")
             }
 
             return data
@@ -53,7 +67,6 @@ function Login() {
         } finally {
             setLoading(false)
         }
-
     }
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()

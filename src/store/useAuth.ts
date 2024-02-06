@@ -1,8 +1,6 @@
 // useAuth.ts
 import { useState } from "react"
 
-
-
 export default function useAuth() {
     const getAccessToken = () => {
         const tokenString: string | null = localStorage.getItem("accessToken")
@@ -22,7 +20,7 @@ export default function useAuth() {
     };
 
     return {
-        setAccessToken: saveAccessToken,
+        saveAccessToken,
         clearAccessToken,
         accessToken,
     }

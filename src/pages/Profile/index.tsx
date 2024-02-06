@@ -8,6 +8,8 @@ interface UserData {
     email: string
 }
 
+const apiBaseURL = import.meta.env.VITE_API_BASE_URL
+
 function Profile() {
 
     const auth = useAuth()
@@ -23,34 +25,32 @@ function Profile() {
     const [c_password, setC_Password] = useState("")
 
     useEffect(() => {
+        async function getUser () {
+            try {
+                const response = await fetch(apiBaseURL + `user`, {
+                    method: "GET",
+                    headers: {
+                        Authorization: `Bearer ${auth.accessToken}`,
+                        "Content-Type": "application/json"
+                    },
+                })
+        
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user information")
+                }
+                const data = await response.json()
+                setData(data)
+                return data
+
+            } catch (error) {
+                console.log(error)
+            } finally {
+                setIsFetching(true)
+            }
+        }
         if (auth.accessToken === null) {
             navigate("/login")
-        }
-        if (auth.accessToken !== null && !isFetching) {
-            // eslint-disable-next-line no-inner-declarations
-            async function getUser (): Promise<void> {
-                try {
-                    const response = await fetch(`http://localhost/api/auth/user`, {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${auth.accessToken}`,
-                            "Content-Type": "application/json"
-                        },
-                    })
-            
-                    if (!response.ok) {
-                        throw new Error("Failed to fetch user information")
-                    }
-                    const data = await response.json()
-                    setData(data)
-                    return data
-    
-                } catch (error) {
-                    console.log(error)
-                } finally {
-                    setIsFetching(true)
-                }
-            }
+        } else if (auth.accessToken !== null && !isFetching) {
             getUser()
         }
     })
@@ -76,15 +76,8 @@ function Profile() {
                 },body: JSON.stringify({name, password, c_password})
             })
 
-            console.log(response)
-    
-            if (response.ok) {
-                alert("Update user info successful")
-                location.reload()
-            } else {
-                // const errorMessage = await response.json()
-                // setError(errorMessage.message)
-                alert("Failed to update user info.")
+            if (!response.ok) {
+                throw new Error(`Failed to update. Status: ${response.status}: ${response.statusText}`)
             }
             
         } catch (error) {
@@ -92,6 +85,8 @@ function Profile() {
             setError(error+"")
         } finally {
             setLoading(false)
+            alert("Update user info successful")
+            location.reload()
         }
     }
 
@@ -111,11 +106,7 @@ function Profile() {
                         required
                         />
                         <label className="mt-2">Email</label>
-                        <input 
-                        type="text" 
-                        value={data?.email}
-                        readOnly
-                        />
+                        <p>{data?.email}</p>
                         <label className="mt-2">Password</label>
                         <input 
                         className="border"
