@@ -5,6 +5,9 @@ import Home from './pages/Home'
 import useAuth from './store/useAuth'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
+import Shop from './pages/Shop'
+import Create from './pages/Shop/Create'
+import Contact from './pages/Contact'
 
 function App() {
   const auth = useAuth()
@@ -21,6 +24,9 @@ function App() {
           <Route path='/register' element={<Register/>}/>
           <Route path='/' element={<Home/>}/>
           <Route path='/profile' element={<Profile/>}/>
+          <Route path='/shop' element={<Shop/>}/>
+          <Route path='/shop/create' element={<Create/>}/>
+          <Route path='/contact' element={<Contact/>}/>
         </Route>
       </Routes>
     </>

@@ -103,7 +103,6 @@ function Profile() {
                         name="name"
                         placeholder={data?.name || ""}
                         onChange={(e) => setName(e.target.value)}
-                        required
                         />
                         <label className="mt-2">Email</label>
                         <p>{data?.email}</p>
@@ -113,7 +112,6 @@ function Profile() {
                         name="password"
                         type="password" 
                         onChange={(e) => setPassword(e.target.value)}
-                        required
                         />
                         <label className="mt-2">Confirm Password</label>
                         <input 
@@ -121,7 +119,6 @@ function Profile() {
                         name="c_password"
                         type="password" 
                         onChange={(e) => setC_Password(e.target.value)}
-                        required
                         />
                         {error && <p className="text-red-400">{error}</p>}
                         <button 

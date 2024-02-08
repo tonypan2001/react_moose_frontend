@@ -15,6 +15,7 @@ function Register() {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [c_password, setC_Password] = useState("")
+    const [role, setRole] = useState("")
 
     useEffect(() => {
         // if accessToken does exist
@@ -27,7 +28,7 @@ function Register() {
         e.preventDefault()
         setLoading(true)
         setError("")
-
+        setRole("customer")
         if (password !== c_password) {
             setError("Passwords do not match")
             return
@@ -38,7 +39,7 @@ function Register() {
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({name, email, password, c_password})
+                body: JSON.stringify({name, email, password, c_password, role})
             })
 
             if (!response.ok) {
